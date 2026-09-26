@@ -1,0 +1,5 @@
+class Constants {
+  static const String metaAccessToken = 'EAAZAk8p3p5NsBSlkPlkOPVo7DF7iAKJBddHnZBVeGbRlvC5o1rbicUUbc3A3LoJpheMYn4QeZByRDnOr3X3WD1qsShFOK3rMZCLUj9aYBQ0awyk4ie28yrbPZByY123XlzQaCzEXp141mjGW8AVnq5TjPI0guCZAlOtqbYtxBYZCmODCJycGLBXnVhTZBDgfvneMaTllR0LnUKngkAZCX5leyMJNV4k1xpsSB9OdZAZCS9qYcOn5D5Y5mdfIJpg85ZBGBrxp8D9RHEPwMSm5s5lpUaGRxqxXwwZDZD';
+  static const String phoneNumberId = '1331629060032797';
+  static const String otpTemplateName = 'hello_world'; 
+}

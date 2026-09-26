@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "707497538644",
+    "project_id": "ikokas-expense",
+    "storage_bucket": "ikokas-expense.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:707497538644:android:275450750b1069473a29c1",
+        "android_client_info": {
+          "package_name": "com.ikokas.ikokas_expense"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_cDgqVVqlcprTnhX_gvbBb3Ar9QK53YI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

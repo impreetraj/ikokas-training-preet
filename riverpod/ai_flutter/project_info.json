@@ -1,0 +1,37 @@
+{
+  "id": 2,
+  "date": "27 August 2026",
+  "title": "AI Chat — Gemini-Powered Chatbot App with Markdown Rendering",
+  "description": "A Flutter chatbot app using Riverpod and Google Gemini API. Users send messages and receive AI responses rendered in rich Markdown format.",
+
+  "tech_stack": ["Flutter", "Riverpod", "Dio", "flutter_dotenv", "flutter_markdown_plus", "intl", "Material 3"],
+
+  "architecture": "Riverpod Notifier Pattern — Controllers handle logic, Services handle API calls, Models hold data, Widgets render UI",
+
+  "features": {
+    "ai_chat": "Single-screen chat UI — user messages (blue, right) and AI responses (grey, left) with auto-scroll",
+    "gemini_api": "REST calls to Gemini API (gemini-flash-latest) via Dio with .env-based API key",
+    "markdown_rendering": "AI responses rendered as rich Markdown (bold, lists, code blocks) using flutter_markdown_plus",
+    "timestamps": "Every message shows time in hh:mm a format",
+    "loading_indicator": "Spinner shown while waiting for AI response",
+    "error_handling": "Graceful handling of network errors and API failures"
+  },
+
+  "project_structure": {
+    "main.dart": "Entry point — loads .env, initializes ProviderScope",
+    "controllers/chat_controller.dart": "Manages messages list and loading state",
+    "models/chat_state.dart": "Immutable state — messages + isLoading",
+    "models/message_model.dart": "Message data — text, isUser, timestamp",
+    "screens/ai_screen.dart": "Chat UI — message list, input field, send button",
+    "services/gemini_service.dart": "Gemini API calls via Dio",
+    "widgets/message_bubble.dart": "Styled chat bubble with Markdown support"
+  },
+
+  "app_flow": "User types message → ChatController adds it to state → GeminiService calls Gemini API → AI response added to state → UI rebuilds with new message bubble → auto-scrolls to bottom",
+
+  "not_present": [
+    "Firebase", "Social Feed", "Like/Comment", "Follow/Unfollow",
+    "Face Verification", "Audio/Video Calling", "BLoC", "Biometric Auth",
+    "Push Notifications", "SQLite/Offline Cache", "User Profiles", "Google Sign-In"
+  ]
+}

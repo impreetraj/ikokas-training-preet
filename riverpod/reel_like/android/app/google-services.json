@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "600172106621",
+    "project_id": "reel-video-74aa3",
+    "storage_bucket": "reel-video-74aa3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:600172106621:android:59dc9d85b08297a7fe7214",
+        "android_client_info": {
+          "package_name": "com.ikokas.reelgram"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMr0NczL1YrNLEuy1Zz8khl3ovIxD26i8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
