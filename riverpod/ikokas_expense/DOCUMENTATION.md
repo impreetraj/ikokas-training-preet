@@ -1,29 +1,23 @@
 # ikokas_expense
 
-This is a comprehensive expense tracker application built with Flutter and Riverpod, featuring analytics charts, Google Maps integration, an admin dashboard, backup and restore functionality, and a multi-database architecture that supports offline use.
+This is an expense tracking application built with Flutter and Riverpod for state management. It utilizes multiple databases and integrates with several external services like Firebase and Google Maps.
 
-The app uses four Riverpod providers working together. The AuthProvider manages Firebase authentication (email/password login and signup). Once logged in, the TransactionProvider handles all expense and income CRUD operations. The AnalyticsProvider computes spending summaries, category breakdowns, and trends for the charts. The AdminProvider powers the admin dashboard for managing users and performing fund transfers.
+The application manages user authentication through Firebase Auth. Once authenticated, the app uses Riverpod providers to manage the state of transactions, analytics, and admin features. 
 
-Transactions are the core of the app. When a user adds a new expense or income on the add screen, it gets saved to three places simultaneously — SQLite locally through the DatabaseHelper, Realm locally using code-generated models (user_model.realm.dart built via build_runner), and Firebase Cloud Firestore in the cloud. The SyncService monitors network connectivity using connectivity_plus and synchronizes data between local and cloud databases. When the device is offline, transactions are stored locally and synced to Firestore when connectivity returns.
+To ensure data availability both online and offline, the app implements a multi-database strategy. It saves transaction data locally using the sqflite package (SQLite) and the Realm database (which requires code generation via build_runner). Simultaneously, it synchronizes this data with Cloud Firestore. The connectivity_plus package is used to detect network state and handle synchronization between the local databases and Firestore.
 
-The analytics screen displays beautiful charts using Syncfusion Flutter Charts — pie charts for spending by category, bar charts for monthly comparisons, and line charts for spending trends over time. The AnalyticsModel structures the data for these visualizations.
+The application provides data visualization by taking transaction data and rendering charts using the Syncfusion Flutter Charts package. 
 
-One unique feature is location-based expense tracking. When adding a transaction, users can tag their current GPS location using geolocator. The geocoding package converts coordinates into human-readable addresses. These locations are then viewable on a Google Maps screen using google_maps_flutter, where users can see where they spent money geographically.
+For location-based expense tracking, the app uses the geolocator package to get the device's coordinates and the geocoding package to convert these coordinates into readable addresses. The google_maps_flutter package is used to display these locations on a map interface.
 
-The admin module (behind an admin role check) provides a dashboard to view all users, see their transaction details on the admin user details screen, and perform fund transfers between accounts through a transfer dialog.
-
-The backup and restore service lets users export their entire transaction data as a compressed archive file using the archive package. They can pick a backup file to restore using file_picker, and the service decompresses and re-imports all the data. Device information is captured via device_info_plus for backup metadata. Reports can be shared using share_plus. Receipt images are captured with image_picker.
-
-The transaction log repository maintains an audit trail of all changes, viewable on the transaction logs screen. The app also features a custom bottom navigation bar, summary cards on the home screen, transaction cards for list items, a settings screen for preferences, and a profile screen.
+Additional features include capturing receipt images with image_picker, sharing reports via share_plus, and a backup/restore system. The backup system uses the archive package to compress local database files into a single exportable file, which can be selected for import using the file_picker package. Device information for backups is retrieved using device_info_plus.
 
 Technologies used: Flutter, flutter_riverpod, Firebase Core, Firebase Auth, Cloud Firestore, sqflite, Realm (with build_runner), Syncfusion Flutter Charts, google_maps_flutter, geolocator, geocoding, image_picker, share_plus, file_picker, archive, connectivity_plus, device_info_plus, font_awesome_flutter, intl, path_provider.
 
 ## Working Flow
-1. Open the app -> Sign up or log in using Firebase Auth.
-2. View Home Dashboard -> Summary cards show your total balance, income, and expenses, along with a list of recent transactions.
-3. Click the Add button (+) -> A form opens to add a new expense or income.
-4. Fill the form -> You can capture a receipt photo (image_picker) and click the location icon to tag your current GPS location (geolocator/geocoding).
-5. Click Save -> The transaction saves to the local SQLite and Realm databases, and syncs to Firebase Cloud Firestore.
-6. Click the Analytics tab -> Syncfusion charts render your spending data as pie charts and trend lines.
-7. Click the Map tab -> Google Maps opens, displaying pins where you made your purchases.
-8. Click Settings -> Access the backup/restore feature, which zips your local database using the archive package and lets you save it or share it.
+1. Open the app -> The app authenticates the user via Firebase Auth.
+2. Add Transaction -> The user inputs expense/income details. They can attach an image via image_picker and a location via geolocator.
+3. Save Transaction -> The Riverpod provider updates its state. The data is saved locally to SQLite and Realm, and an attempt is made to sync it to Cloud Firestore.
+4. View Analytics -> The app processes the transaction state data and passes it to Syncfusion Flutter Charts to render visual graphs.
+5. View Map -> The app passes the saved location coordinates to the google_maps_flutter widget to display transaction locations on a map.
+6. Create Backup -> The app reads the local database files, compresses them using the archive package, and saves the file to the device.

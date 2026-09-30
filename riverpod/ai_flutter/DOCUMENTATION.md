@@ -1,21 +1,18 @@
 # ai_flutter
 
-This is a Flutter AI chatbot application that integrates with Google's Gemini API. It uses Riverpod for state management and renders AI responses as formatted markdown.
+This is a Flutter chatbot application that integrates with Google's Gemini API. The app uses the Riverpod package for state management.
 
-The app opens directly to the AI chat screen. The user types a message at the bottom, and the ChatController (a Riverpod StateNotifier) takes over. It adds the user's message to the chat state, shows a loading indicator, and sends the prompt to the GeminiService. This service uses Dio to make a POST request to Google's Gemini API endpoint, passing the user's text in the required format. The API key is loaded securely from a .env file using flutter_dotenv, which is bundled as an asset in the app.
+The core functionality involves sending user prompts to the Gemini AI and displaying the responses. The app manages the chat state (the list of messages and loading status) using a Riverpod StateNotifier. 
 
-When the Gemini API responds, the service parses the response JSON to extract the AI's text from the candidates array. The ChatController then updates the chat state with the new AI message, and the UI rebuilds. Each message is represented by a MessageModel that tracks the text content, whether it's from the user or the AI, and a timestamp formatted with intl.
+When a user submits a prompt, the application makes an HTTP POST request to the Google Gemini API using the Dio package. The API key required for this request is stored securely in a local `.env` file and loaded at runtime using the flutter_dotenv package. 
 
-The chat messages are displayed in a scrollable list of MessageBubble widgets. The AI's responses are rendered using flutter_markdown_plus, which means code blocks, bold text, lists, and other markdown formatting from the AI come through beautifully styled. User messages and AI messages are visually differentiated with different bubble styles.
-
-The chat history lives entirely in memory through the ChatState model, so it resets when the app is restarted.
+Once the Gemini API returns a response in JSON format, the application parses the data to extract the AI's generated text. The chat state is then updated with this new message. To properly display the AI's response, which often contains markdown formatting (like bold text, lists, or code blocks), the application uses the flutter_markdown_plus package to render the text. The intl package is used for formatting timestamps on the messages.
 
 Technologies used: Flutter, flutter_riverpod, Dio, flutter_dotenv, flutter_markdown_plus, intl.
 
 ## Working Flow
-1. Open the app -> The AI Chat Screen appears instantly.
-2. Type a message in the text field -> The UI updates to show your message bubble on the right side.
-3. Click Send -> The Riverpod ChatController shows a loading indicator and makes a POST request to the Google Gemini API using Dio and your hidden .env API key.
-4. Wait for response -> The API returns a JSON response containing the AI's answer.
-5. Message received -> The loading indicator disappears, and the AI's response is appended to the chat on the left side.
-6. Read the AI message -> The flutter_markdown_plus package renders the AI's text, formatting any code blocks, bullet points, or bold text beautifully.
+1. Open the app -> The Riverpod state initializes an empty chat history.
+2. Submit a prompt -> The user enters text. The Riverpod controller adds the user's message to the state and sets a loading flag.
+3. API Request -> The app reads the API key using flutter_dotenv and sends the user's text to the Gemini API via a Dio POST request.
+4. Receive Response -> The app receives the JSON response from Gemini, extracts the text, and updates the Riverpod state with the new AI message.
+5. Render Text -> The UI rebuilds, and the flutter_markdown_plus widget renders the AI's message, applying appropriate formatting to any markdown syntax.

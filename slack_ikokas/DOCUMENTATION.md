@@ -1,25 +1,21 @@
 # slack_ikokas
 
-This is a Flutter Slack client application that integrates directly with the real Slack API. Users authenticate through Slack's OAuth2 flow, browse their workspace channels, send and receive messages, and share files, images, videos, audio recordings, location, and contacts — all through actual Slack API calls.
+This is a Flutter application that acts as a client for the official Slack API. It allows users to authenticate with Slack, view channels, send messages, and upload media.
 
-The authentication flow is a full OAuth2 implementation with PKCE. The AuthController opens the Slack OAuth URL in the device browser using url_launcher. After the user authorizes the app in their Slack workspace, Slack redirects back to the app via a deep link, which app_links captures. The controller extracts the authorization code from the deep link and exchanges it for an access token by calling the exchangeCode method on the SlackApiService, which posts to Slack's oauth.v2.access endpoint. The PKCE code verifier is generated using the crypto package. Once the token is received, it's stored in the SlackApiService singleton and attached to all subsequent API requests via a Dio interceptor that adds the Bearer token to the Authorization header.
+The authentication process relies on Slack's OAuth2 flow with PKCE. The application uses the url_launcher package to open the Slack authorization URL in the device's browser. Once the user approves access, Slack redirects back to the application using a deep link, which is intercepted by the app_links package. The app then exchanges the authorization code for an access token via an API call. The crypto package is used to generate the necessary PKCE code verifier for this flow.
 
-The SlackApiService is the heart of the app — a singleton class with a Dio client configured for the Slack API base URL. It provides methods for every Slack operation: getChannels fetches the user's conversations (public, private, and group DMs) via users.conversations, createChannel creates new channels via conversations.create, openGroupChat opens group DMs, and inviteToChannel adds users to channels. For messaging, getMessages fetches channel history via conversations.history, sendMessage posts via chat.postMessage (with optional username and emoji icon), updateMessage edits messages, and deleteMessage removes them.
+All communication with the Slack API is handled by the Dio HTTP client. Once the OAuth token is acquired, it is added to the headers of all subsequent Dio requests. The app makes GET requests to endpoints like `users.conversations` and `conversations.history` to fetch channel lists and messages. It makes POST requests to `chat.postMessage` to send new messages.
 
-File sharing uses Slack's three-step external upload process. First, uploadFile calls files.getUploadURLExternal to get a presigned URL and file ID. Then it uploads the actual file to that URL using multipart form data. Finally, it calls files.completeUploadExternal to associate the file with a channel and add an optional message. File downloads go through downloadFileBytes, which handles authentication redirects (301/302) by following the redirect chain and adding the Bearer token.
+The application supports various media types. Users can select images or videos using the image_picker package, select documents with the file_picker package, or record audio using the record package. For uploading files, the app implements Slack's three-step external upload process via Dio.
 
-The ChannelController manages the channel list state, and the ChatController handles the message flow within a channel. The chat view supports text messages plus rich media — users can pick images and videos with image_picker, select documents with file_picker, record audio using the record package, share their GPS location via geolocator (sent as a Google Maps link in the message), and share device contacts through flutter_contacts. Videos are played back with video_player and chewie, and audio files use audioplayers. All permissions are managed through permission_handler.
-
-The getUserName method on the service resolves Slack user IDs to display names by calling users.info, with results cached in a map to avoid repeated API calls.
+Additionally, the app can acquire the device's coordinates using the geolocator package to share location data, and access the device's contact list using the flutter_contacts package. The permission_handler package manages the necessary permissions for these hardware features. For media playback, the app uses the video_player and chewie packages for video, and audioplayers for audio files.
 
 Technologies used: Flutter, Dio, url_launcher, app_links, image_picker, file_picker, geolocator, flutter_contacts, video_player, chewie, record, audioplayers, permission_handler, path_provider, crypto.
 
 ## Working Flow
-1. Open the app -> The Login View appears.
-2. Click "Login with Slack" -> The app launches your phone's browser taking you to the Slack authorization page.
-3. Approve access -> Slack redirects back to the app via a deep link. The app captures this, exchanges the code for a Bearer token, and saves it.
-4. Land on Channel List -> The app makes an API call to Slack to fetch and display all your workspace conversations.
-5. Click a channel -> The Chat View opens, fetching message history from Slack API.
-6. Type a message and send -> An API request posts your message to the channel, and it appears in the actual Slack app for other users.
-7. Click the Attachment icon -> Choose an option like "Location". The app grabs your GPS coordinates and sends a Google Maps link to the Slack channel.
-8. Click "Record Audio" -> You speak into the mic, and the app uploads the audio file using Slack's 3-step file upload API, attaching it to the conversation.
+1. Open the app -> The app presents a login option.
+2. Authenticate -> The app uses url_launcher to open the Slack OAuth page. After user approval, app_links intercepts the redirect URI, and the app uses Dio to exchange the code for an API token.
+3. Fetch Data -> The app uses Dio to call Slack API endpoints, fetching the user's channels and messages, and renders them in the UI.
+4. Send Message -> The user submits text. The app makes a POST request via Dio to the Slack API, which adds the message to the actual Slack channel.
+5. Attach Media -> The user selects a file (via image_picker or file_picker), records audio, or grabs their location (via geolocator).
+6. Upload to Slack -> The app executes the multi-step Slack file upload API flow via Dio to upload the asset and attach it to a conversation.

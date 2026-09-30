@@ -1,15 +1,18 @@
 # project_list
 
-This is a minimal Flutter application that displays a list of projects and lets users tap on any project to see its details. It uses no external dependencies beyond the Flutter framework itself — no state management library, no database, no API calls.
+This is a foundational Flutter application that demonstrates basic data rendering and navigation without relying on any external packages or complex state management libraries.
 
-The app has a static data source defined in project_list.dart inside the json folder. This file contains a list of project data structured as Dart objects. The HomePage reads this data and renders it as a scrollable list. When the user taps on a project in the list, the app navigates to the DetailsPage, passing the selected project's data. The details page then displays the full information about that project.
+The application's data is statically defined within the Dart code itself, typically as a JSON-like list of objects or maps containing project details. 
 
-The entire app runs on Flutter's default setState mechanism for any state changes, and the data is hardcoded rather than fetched from any backend.
+The application uses standard Flutter state management (`setState`) and core layout widgets to display this static data as a list on the primary screen. 
 
-Technologies used: Flutter (no external packages).
+When a user selects an item from the list, the application utilizes Flutter's built-in `Navigator` to transition to a details screen. The data object associated with the selected list item is passed as an argument to the details screen, which then reads the properties of that object to display the full information.
+
+Technologies used: Pure Flutter framework (no external dependencies).
 
 ## Working Flow
-1. Open the app -> The Home Page renders a scrollable list using data loaded directly from a static local Dart file.
-2. Scroll through the list -> You see the titles of various projects.
-3. Click a list item -> The app uses Navigator.push to open the Details Page, passing the specific project's data object along.
-4. View details -> The Details Page reads the passed object and displays the full text and information for that single project.
+1. Open the app -> The main widget initializes and reads the statically defined list of data objects.
+2. Render List -> The UI iterates over the data objects and builds a list view.
+3. Select Item -> The user taps a specific item in the list.
+4. Navigate -> The app uses `Navigator.push` to transition to the details screen, passing the selected data object to the constructor of the new route.
+5. View Details -> The details screen reads the properties of the passed object and displays them in the UI.
